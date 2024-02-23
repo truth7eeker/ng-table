@@ -45,7 +45,7 @@ export class FooterComponent implements OnInit {
   faLeft = faChevronLeft
 
   ngOnInit(): void {
-    this.tableConfigService.setPagination(this.usersService.users().length, 10)
+    this.tableConfigService.setPagination(this.usersService.displayedUsers().length, 10)
   }
 
   keyUp(entriesNum: string) {
@@ -53,7 +53,7 @@ export class FooterComponent implements OnInit {
       return
     }
 
-    this.tableConfigService.setPagination(this.usersService.users().length, entriesNum)
+    this.tableConfigService.setPagination(this.usersService.displayedUsers().length, entriesNum)
 
     this.usersService.slice(this.tableConfigService.firstEntryIndex(),
       this.tableConfigService.entriesPerPage())
