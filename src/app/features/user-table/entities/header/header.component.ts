@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Subject, debounceTime } from 'rxjs';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -13,22 +13,18 @@ import { SettingsComponent } from '../settings/settings.component';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit {
   usersService: UsersService = inject(UsersService)
   spinnerService: SpinnerService = inject(SpinnerService)
   valueChanged: Subject<string> = new Subject()
 
   ngOnInit() {
-    this.valueChanged.pipe(debounceTime(500)).subscribe(val => {
-      this.spinnerService.showWithTimeout(500)
+    this.valueChanged.pipe(debounceTime(1000)).subscribe(val => {
+      this.spinnerService.showWithTimeout(1000)
       this.usersService.filter(val)
     })
   }
 
-  ngOnDestroy(): void {
-    this.spinnerService.clearTimeout()
-  }
-  
   keyUp(val: string) {
     this.valueChanged.next(val)
   }
