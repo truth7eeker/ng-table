@@ -1,0 +1,7 @@
+.table-widget {
+    display: flex;
+    flex-direction: column;
+    margin: 0 2rem;
+    min-width: 1000px;
+}
+

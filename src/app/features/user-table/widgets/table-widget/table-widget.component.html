@@ -1,0 +1,15 @@
+<div class="table-widget">
+    @if(!spinnerService.loading() && !firstLoad()) {
+        <app-header />
+        <app-table/>
+        <app-footer />
+
+    }
+    @else if (spinnerService.loading() && !firstLoad()) {
+        <app-header />
+        <app-spinner />
+    }
+    @else {
+        <app-spinner />
+    }
+</div>

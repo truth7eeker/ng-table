@@ -1,0 +1,10 @@
+<label 
+    class="switch" 
+    (click)="toggleVisibility(column()!)"
+>
+    <input 
+        type="checkbox" 
+        [checked]="column()!.show"
+/>
+    <span class="slider round"></span>
+</label>

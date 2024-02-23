@@ -1,0 +1,90 @@
+.user-table {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(100px, 1fr)) 
+      minmax(100px, max-content)
+      repeat(2, max-content) 
+      repeat(4, minmax(100px, 1fr))
+      min-content
+      minmax(100px, max-content)
+;
+  grid-auto-columns: min-content;
+  padding: 0 1rem;
+  background-color: var(--light-grey-color);
+  border-radius: 10px;
+  color: var(--cell-text-color);
+}
+
+.user-table__header {
+  color: var(--primary-color);
+  cursor: pointer;
+  margin-top: 2rem ;
+  padding: 0 .7rem;
+}
+
+.cell {
+  font-size: .9rem;
+  border-bottom: 1px solid var(--primary-color);
+  padding: 0.3rem .7rem;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  word-break: break-all;
+}
+
+.cell fa-icon {
+  margin-top: 2px;
+}
+
+.cell__tags {
+  padding: 0.3rem .7rem;
+  display: grid;
+  grid-template-columns: repeat(2, 70px);
+  grid-auto-columns: min-content;
+  gap: 5px;
+}
+
+.cell__tag {
+ background-color: rgb(185, 211, 236);
+ padding: 3px 5px;
+ width: fit-content;
+ border-radius: 20px;
+}
+
+.cell__tag:nth-child(3n+1) {
+  background-color: rgb(208, 211, 242);
+}
+
+
+.cell img {
+  border-radius: 15px;
+  margin-right: 4px;
+  width: 30px;
+  height: 30px;
+}
+
+.cell__tooltip {
+  position: absolute;
+  width: fit-content;
+  background-color: #fff;
+  border: 1px solid var(--secondary-color);
+  border-radius: 10px;
+  padding: 5px 10px;
+  z-index: 999;
+  visibility:hidden;
+}
+
+.text--green {
+  color: var(--online-color)
+}
+
+.text--grey {
+  color: var(--offline-color)
+}
+
+.user-table__notfound {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  margin-top: 2rem;
+}

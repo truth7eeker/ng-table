@@ -1,0 +1,33 @@
+.header__settings fa-icon {
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.header__settings {
+    position: relative;
+}
+
+.settings__popup {
+    position: absolute;
+    top: 40px;
+    right: -70px;
+    z-index: 10;
+    padding: 1rem;
+    background-color: var(--light-grey-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 10px;
+}
+
+.settings__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: .2rem;
+}
+
+.settings__item-text {
+    font-weight: 600;
+    color:  var(--cell-text-color);
+
+}

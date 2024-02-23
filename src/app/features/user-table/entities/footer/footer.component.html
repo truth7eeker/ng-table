@@ -1,0 +1,33 @@
+@if(someShown() && someFound() && !spinnerService.loading()) {
+    <footer class="footer">
+        <div class="footer__entries-num">
+            <label for="entries-num">Entries per page:</label>
+            <input
+                #entries
+                id="entries-num"
+                type="number"
+                [value]="tableConfigService.entriesPerPage()"
+                [min]="1"
+                (keyup)="keyUp(entries.value)"
+            />
+        </div>
+        <div class="footer__pagination">
+            <fa-icon 
+                [icon]="faLeft" 
+                (click)="prev()"
+            />
+            @for (page of displayedPages(); track page) {
+                <div
+                    [ngClass]="[page === selectedPage() ? 'footer__page-active' : '']"
+                    (click)="selectPage(page)"
+                >
+                    {{page}}
+                </div>
+            }
+            <fa-icon 
+                [icon]="faRight" 
+                (click)="next()"
+            />
+        </div>
+    </footer>
+}

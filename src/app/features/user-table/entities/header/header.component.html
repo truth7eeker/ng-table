@@ -1,0 +1,17 @@
+<header class="header">
+    <h1>Users</h1>
+    <div class="search-wrapper">
+        <div class="search">
+            <label for="search__input"></label>
+            <input 
+                #search
+                id="search__input"
+                class="search__input"
+                placeholder="Search"
+                (keyup)="keyUp(search.value)"
+            />
+        </div>
+        <app-settings />
+    </div>
+</header>
+

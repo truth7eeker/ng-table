@@ -1,0 +1,16 @@
+:root {
+    --primary-color: #BDC7FB;
+    --secondary-color:#1FC4F0;
+    --online-color: #35B829;
+    --offline-color: #6C757D;
+    --light-grey-color: #F4F5F9;
+    --cell-text-color: #323d77
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Open Sans';
+}
+

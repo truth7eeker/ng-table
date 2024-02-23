@@ -1,0 +1,1 @@
+export { TableWidgetComponent } from './table-widget/table-widget.component'

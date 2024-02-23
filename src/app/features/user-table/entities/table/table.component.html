@@ -1,0 +1,73 @@
+<div class="main-wrapper">
+    @if(!usersService.displayedUsers().length) {
+        <h3 class="user-table__notfound">Not found</h3>
+    }
+    @else {
+        <div class="user-table" #userTable>
+            @for (header of tableConfigService.columns(); track header) {
+                <h3
+                    class='user-table__header'
+                    [style.display]="header.show ? 'flex' : 'none'"
+                    (click)="selectHeader(header)"
+                >
+                
+                {{ header.displayName }}</h3>
+            }
+        
+            @for (user of usersService.displayedUsers(); track user) {
+                
+                @for (column of tableConfigService.columns(); track column) {  
+                    @switch (column.property) {
+                        @case ('isActive') {
+                            <div [ngClass]="['cell', 
+                                user['isActive'] === 'online' ? 'text--green' : 'text--grey']"
+                                [style.display]="column.show ? 'flex' : 'none'"
+                                >
+                                <fa-icon [icon]="faCircle" size="xs"></fa-icon>
+                               <span> {{ user[column.property] }}</span>
+                            </div>
+                        }
+                        @case ('person') {
+                            <div class="cell"
+                                [style.display]="column.show ? 'flex' : 'none'"
+                                >
+                                <img [src]="user['person'].picture"/>
+                                <div>{{user['person'].name}}</div>
+                            </div>
+                        }
+                        @case ('tags') {
+                            <div 
+                                class="cell cell__tags"
+                                [style.display]="column.show ? 'grid' : 'none'"
+                            >
+                                @for(tag of user['tags']; track tag) {
+                                    <span class="cell__tag">{{tag}}</span>
+                                }
+                            </div>
+                        }
+                        @case ('balance') {
+                            <div class="cell"
+                                [style.display]="column.show ? 'flex' : 'none'"
+                            >
+                                {{ user[column.property] | currency }}
+                            </div>
+                        }
+                        @default {
+                            <div 
+                                class="cell" 
+                                [style.display]="column.show ? 'flex' : 'none'"
+                            >
+                                <div>{{ user[column.property] }}</div>
+                                <div class="cell__tooltip"></div>   
+                            </div>
+                            
+                        }
+                    }
+                }  
+            }
+        </div>
+    } 
+  
+</div>
+
+

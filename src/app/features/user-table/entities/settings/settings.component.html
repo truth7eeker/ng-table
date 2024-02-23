@@ -1,0 +1,18 @@
+<div class="header__settings settings">
+    <fa-icon 
+        [icon]="faGear" 
+        size="lg"
+        (click)="togglePopup()"
+    />
+    <div 
+        class="settings__popup"
+        [style.visibility]="showPopup() ? 'visible' : 'hidden'"
+    >
+        @for (column of tableConfigService.columns(); track column) {
+            <div class="settings__item">
+                <div class="settings__item-text">{{column.displayName}}</div>
+                <app-toggle [column]="column" />
+            </div>
+        }
+    </div>
+</div>
