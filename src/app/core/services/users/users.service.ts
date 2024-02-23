@@ -57,7 +57,10 @@ export class UsersService {
 
   filter(search: string) {
     // refresh
-     this.displayedUsers.set(this.users())
+
+    if(!this.displayedUsers().length) {
+      this.displayedUsers.set(this.users())
+    }
 
     if (!search) {
       this.displayedUsers.set(this.users())
