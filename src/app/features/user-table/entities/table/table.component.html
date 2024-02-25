@@ -1,6 +1,14 @@
 <div class="main-wrapper">
     @if(!usersService.displayedUsers().length) {
-        <h3 class="user-table__notfound">Not found</h3>
+        <div class="notfound">
+            <h3 class="notfound__text">Not found</h3>
+            <button 
+                (click)="goBack()"
+                class="notfound__btn"
+            >
+                Back
+            </button>
+        </div>
     }
     @else {
         <div class="user-table" #userTable>
@@ -66,8 +74,7 @@
                 }  
             }
         </div>
-    } 
-  
+    }   
 </div>
 
 

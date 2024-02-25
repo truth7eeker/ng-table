@@ -1,4 +1,5 @@
 import { Injectable, signal, inject } from '@angular/core';
+import { timer } from 'rxjs';
 
 import { data } from '../../data'
 import { UserResponse, IUserResponse, ITableColumn } from 'src/app/core/models';
@@ -11,7 +12,7 @@ import { SpinnerService } from '../spinner/spinner.service';
 })
 export class UsersService {
   tableConfigService: TableConfigService = inject(TableConfigService)
-  spinnerService:SpinnerService = inject(SpinnerService)
+  spinnerService: SpinnerService = inject(SpinnerService)
 
   users = signal<IUserResponse[]>([])
   displayedUsers = signal<IUserResponse[]>(this.users())
@@ -57,17 +58,18 @@ export class UsersService {
 
   filter(search: string) {
     // refresh
+    const original = this.slice(this.tableConfigService.firstEntryIndex(),
+      this.tableConfigService.entriesPerPage())
 
-    if(!this.displayedUsers().length) {
-      this.displayedUsers.set(this.users())
-    }
+    this.displayedUsers.set(original)
 
-    if (!search) {
-      this.displayedUsers.set(this.users())
+    if (!this.displayedUsers().length || !search) {
+      this.displayedUsers.set(original)
       return
+
     }
 
-    const toStringed = this.displayedUsers().map(u => ({
+    const toStringed = original.map(u => ({
       ...u,
       tags: u.tags?.join(''),
       age: u['age'].toString(),
@@ -102,6 +104,22 @@ export class UsersService {
 
     const sliced = this.users().slice(start, end)
     this.displayedUsers.set(sliced)
+
+    return sliced
+  }
+
+  getData() {
+    this.spinnerService.show()
+
+    const timer$ = timer(1000)
+
+    timer$.subscribe(() => {
+      this.spinnerService.hide()
+      this.slice(
+        this.tableConfigService.firstEntryIndex(),
+        this.tableConfigService.entriesPerPage()
+      );
+    })
   }
 
 }

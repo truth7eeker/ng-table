@@ -1,22 +1,26 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, computed, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { SpinnerService, TableConfigService, UsersService } from 'src/app/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { SpinnerComponent } from 'src/app/shared';
+import { Subject, debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
   imports: [CommonModule, FontAwesomeModule, SpinnerComponent],
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.css'
+  styleUrl: './footer.component.css',
 })
-export class FooterComponent implements OnInit {
+export class FooterComponent implements OnInit, OnDestroy {
   tableConfigService: TableConfigService = inject(TableConfigService)
   usersService: UsersService = inject(UsersService)
   spinnerService: SpinnerService = inject(SpinnerService)
+
+  allUsers = this.usersService.users().length
+  entries = this.tableConfigService.entriesPerPage()
 
   someShown = computed(() => {
     return this.tableConfigService.columns().some(c => c.show)
@@ -33,19 +37,31 @@ export class FooterComponent implements OnInit {
       return pages.slice(0, pages.length)
     }
     else {
-      return pages.slice(this.currPage() - 1, this.currPage() + 2)
+      return pages.slice(this.tableConfigService.currPage() - 1, 
+      this.tableConfigService.currPage() + 2)
     }
-
   })
 
-  currPage = signal<number>(1)
-  selectedPage = signal<number>(1)
+  entriesVal = new Subject<string>()
 
   faRight = faChevronRight
   faLeft = faChevronLeft
 
-  ngOnInit(): void {
-    this.tableConfigService.setPagination(this.usersService.users().length, 10)
+  ngOnInit() {
+    this.init(this.allUsers, this.entries)
+    
+    this.entriesVal.pipe(debounceTime(1000)).subscribe((val) => {
+      this.init(this.allUsers, Number(val))
+      this.usersService.getData()
+    })
+  }
+
+  ngOnDestroy() {
+    this.entriesVal.unsubscribe()
+  }
+
+  init(length: number, entriesPerPage: number) {
+    this.tableConfigService.setPagination(length, entriesPerPage)
   }
 
   keyUp(entriesNum: string) {
@@ -53,38 +69,20 @@ export class FooterComponent implements OnInit {
       return
     }
 
-    this.tableConfigService.setPagination(this.usersService.displayedUsers().length, entriesNum)
+    this.entriesVal.next(entriesNum)
 
-    this.usersService.slice(this.tableConfigService.firstEntryIndex(),
-      this.tableConfigService.entriesPerPage())
-
-    this.currPage.set(1)
-    this.selectedPage.set(1)
   }
 
- selectPage(page: number) {
-    this.selectedPage.set(page);
-  
-    this.tableConfigService.setFirstEntryIndex(page);
-  
-    this.usersService.slice(
-      this.tableConfigService.firstEntryIndex(),
-      this.tableConfigService.entriesPerPage()
-    );
+  selectPage(page: number) {
+    this.tableConfigService.setPage(page)
+    this.usersService.getData()
   }
 
   prev() {
-    if (this.currPage() <= 1) {
-      return
-    }
-    this.currPage.update(prev => prev - 1)
+    this.tableConfigService.prev()
   }
 
   next() {
-    if (this.currPage() === this.tableConfigService.pages().at(-3)) {
-      return;
-    }
-    this.currPage.update(prev => prev + 1)
+    this.tableConfigService.next()
   }
-
 }

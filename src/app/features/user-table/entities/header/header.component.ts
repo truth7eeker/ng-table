@@ -1,9 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Subject, debounceTime } from 'rxjs';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Subject, debounceTime, timer } from 'rxjs';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-import { UsersService, SpinnerService } from 'src/app/core';
+import { UsersService, SpinnerService, TableConfigService } from 'src/app/core';
 import { SettingsComponent } from '../settings/settings.component';
 
 @Component({
@@ -13,19 +13,33 @@ import { SettingsComponent } from '../settings/settings.component';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   usersService: UsersService = inject(UsersService)
   spinnerService: SpinnerService = inject(SpinnerService)
-  valueChanged: Subject<string> = new Subject()
+  tableConfigService: TableConfigService = inject(TableConfigService)
 
+  valueChanged: Subject<string> = new Subject()
+ 
   ngOnInit() {
     this.valueChanged.pipe(debounceTime(1000)).subscribe(val => {
-      this.spinnerService.showWithTimeout(1000)
-      this.usersService.filter(val)
+      
+      const timer$ = timer(500)
+      this.spinnerService.show()
+
+      timer$.subscribe(() => {
+        this.spinnerService.hide()
+        this.usersService.filter(val);
+      })
+      
     })
+  }
+
+  ngOnDestroy(): void {
+    this.valueChanged.unsubscribe()
   }
 
   keyUp(val: string) {
     this.valueChanged.next(val)
+
   }
 }

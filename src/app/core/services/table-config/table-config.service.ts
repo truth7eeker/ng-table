@@ -1,18 +1,22 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 
 import { columnData } from '../../data';
 import { ITableColumn } from '../../models';
-
+import { SpinnerService } from '../spinner/spinner.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TableConfigService {
+  spinnerService: SpinnerService = inject(SpinnerService)
+
   columns = signal<ITableColumn[]>(columnData)
   entriesPerPage = signal<number>(10)
   firstEntryIndex = signal<number>(0)
   pagesNum = signal<number>(6)
-  pages = signal<number[]>([])
+  pages = signal<number[]>([1])
+  currPage = signal<number>(1)
+  selectedPage = signal<number>(1)
 
   setSortingOrder(column: ITableColumn) {
     const orderChanged = this.columns().map((c: ITableColumn) => {
@@ -42,7 +46,6 @@ export class TableConfigService {
     }
 
     this.pages.set(pages)
-    this.firstEntryIndex.set(0)
   }
 
   setFirstEntryIndex(page: number) {
@@ -58,6 +61,25 @@ export class TableConfigService {
       }
     });
     this.columns.set(toggled)
+  }
+
+  setPage(page: number) {
+    this.selectedPage.set(page);
+    this.setFirstEntryIndex(page);
+  }
+
+  prev() {
+    if (this.currPage() <= 1) {
+      return
+    }
+    this.currPage.update(prev => prev - 1)
+  }
+
+  next() {
+    if (this.currPage() === this.pages().at(-3)) {
+      return;
+    }
+    this.currPage.update(prev => prev + 1)
   }
 
 }

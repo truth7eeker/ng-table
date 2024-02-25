@@ -38,4 +38,8 @@ export class TableComponent {
     this.userTable.nativeElement.style.gridTemplateColumns = `repeat(${num}, minmax(min-content, 1fr))`
   }
 
+  goBack() {
+    this.usersService.filter('')
+  }
+
 }
